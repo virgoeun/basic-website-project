@@ -1,6 +1,15 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const server = express();
 server.use(express.static("public"));
+const hbs = require('hbs'); //only when partial is required
+
+server.set('view engine', 'hbs')
+server.set('views', __dirname+'/views')
+server.use(express.static(__dirname + '/public'))
+hbs.registerPartials(__dirname + '/views/partials');
+
+
 
 server.get(
   "/about",
@@ -8,7 +17,7 @@ server.get(
     request,
     response,
     next //request first, then response
-  ) => response.sendFile(__dirname + "/views/about.html")
+  ) => response.render("about")
 );
 server.get(
   "/works",
@@ -16,10 +25,10 @@ server.get(
     request,
     response,
     next //get(/...) is the "router" name!
-  ) => response.sendFile(__dirname + "/views/works.html")
+  ) => response.render("works")
 );
 server.get("/home", (request, response, next) =>
-  response.sendFile(__dirname + "/views/home-page.html")
+  response.render("home-page")
 );
 
 server.listen(3000, () =>
